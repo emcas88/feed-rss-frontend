@@ -1,0 +1,24 @@
+
+.add-feed-container {
+    margin-top: 20px;
+    margin-bottom: 50px;
+  }
+  
+  .add-feed-form {
+    width: 100%;
+    height: 40px;
+  }
+  
+  .add-feed-input {
+    width: 65%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  input[type=text]:focus {
+    border: 3px solid rgb(128, 124, 124);
+  }
+  
+  .add-feed-submit {
+    width: 20%;
+  }

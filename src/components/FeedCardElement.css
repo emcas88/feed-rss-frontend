@@ -1,0 +1,19 @@
+
+.feed-card-element {
+    border: 1px solid;
+    height: 40vh;
+    min-width: 29%;
+}
+
+.feed-title {
+    border-bottom: 1px solid;
+    text-align: center;
+}
+
+.feed-title h2 {
+    margin: 10px;
+}
+
+.feed-headlines {
+    overflow: hidden;
+}
