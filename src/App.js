@@ -31,9 +31,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <FeedAddMain newFeedAction={this.handleNewFeedElement}/>
-        <FeedCardList feeds={this.state.feeds}/>
+      <div>
+        <FeedAddMain className="main-container" newFeedAction={this.handleNewFeedElement}/>
+        <FeedCardList className="feed-container" feeds={this.state.feeds}/>
       </div>
     );
   }

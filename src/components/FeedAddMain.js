@@ -1,4 +1,5 @@
 import React from 'react';
+import RSSParser from 'rss-parser'
 import './FeedAddMain.css';
 
 class FeedAddMain extends React.Component {
@@ -10,7 +11,8 @@ class FeedAddMain extends React.Component {
         this.handleChange = this.handleChange.bind(this);
 
         this.state = {
-            feedUrl: ''
+            feedUrl: '',
+            feedId: 0
         };
     }
 
@@ -21,9 +23,36 @@ class FeedAddMain extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        this.props.newFeedAction({
-            title: this.state.feedUrl,
-            latestNews: ['BBBBB', 'CCCCCC']
+        if (this.state.feedUrl === "")
+            return;
+
+        let parser = new RSSParser();
+        const CORS_PROXY = "https://cors-anywhere.herokuapp.com/"
+
+        // https://www.reddit.com/.rss
+ 
+        parser.parseURL(CORS_PROXY + this.state.feedUrl, (err, feed) => {
+            console.log(feed);
+            console.log(err);
+
+            if (err) {
+                this.setState((state, props) => ({
+                    feedUrl: ''
+                }));
+
+                return;
+            }
+
+            this.props.newFeedAction({
+                id: this.state.feedId,
+                title: feed.title,
+                latestNews: feed.items
+            });
+            
+            this.setState((state, props) => ({
+                feedId: state.feedId + 1,
+                feedUrl: ''
+            }));
         });
     }
 

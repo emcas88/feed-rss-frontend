@@ -12,11 +12,11 @@ class FeedCardList extends React.Component {
 
     render() {
         const feedItems = this.props.feeds.map((feedElement) =>
-            <FeedCardElement feed={feedElement} />
+            <FeedCardElement key={feedElement.id} feed={feedElement} />
         );
 
         return (
-            <div className="flex-container feed-cards-container">
+            <div className="feed-cards-container">
                 {feedItems}
             </div>
         );

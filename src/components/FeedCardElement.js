@@ -4,14 +4,14 @@ import './FeedCardElement.css';
 class FeedCardElement extends React.Component {
 
     constructor(props) {
-        super(props);
-        this.state = {};
+      super(props);
+      this.state = {};
     }
 
     render() {
         const latestNews = this.props.feed.latestNews.map(latestNew => 
-          <li><a href={latestNew} target='_blank'>{latestNew}</a></li>
-        )
+          <li key={latestNew.id}><a rel="noopener noreferrer" href={latestNew.link} target='_blank'>{latestNew.title}</a></li>
+        );
 
         return (
             <div className="feed-card-element">
@@ -24,7 +24,6 @@ class FeedCardElement extends React.Component {
                     {latestNews}
                 </ul>
               </div>
-    
             </div>
         );
     }
