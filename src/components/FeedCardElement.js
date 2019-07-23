@@ -1,27 +1,33 @@
 import React from 'react';
 import './FeedCardElement.css';
 
+class FeedCardElement extends React.Component {
 
-function FeedCardElement() {
-    return (
-        <div className="feed-card-element">
-          <div className="feed-title">
-            <h2>This is the title</h2>
-          </div>
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
 
-          <div className="feed-headlines">
-            <ul>
-              <li><a>Coffee</a></li>
-              <li><a>Coffee</a></li>
-              <li><a>Coffee</a></li>
-              <li><a>Coffee</a></li>
-              <li><a>Coffee</a></li>
-              <li><a>Coffee</a></li>
-            </ul>
-          </div>
+    render() {
+        const latestNews = this.props.feed.latestNews.map(latestNew => 
+          <li><a href={latestNew} target='_blank'>{latestNew}</a></li>
+        )
 
-        </div>
-    );
+        return (
+            <div className="feed-card-element">
+              <div className="feed-title">
+                <h2>{this.props.feed.title}</h2>
+              </div>
+    
+              <div className="feed-headlines">
+                <ul>
+                    {latestNews}
+                </ul>
+              </div>
+    
+            </div>
+        );
+    }
 }
 
 export default FeedCardElement;
