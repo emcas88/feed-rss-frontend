@@ -9,8 +9,8 @@ class FeedCardElement extends React.Component {
     }
 
     render() {
-        const latestNews = this.props.feed.latestNews.map(latestNew => 
-          <li key={latestNew.id}><a rel="noopener noreferrer" href={latestNew.link} target='_blank'>{latestNew.title}</a></li>
+        const latestNews = this.props.feed.items.map((latestNew, index) => 
+          <li key={index}><a rel="noopener noreferrer" href={latestNew.link} target='_blank'>{latestNew.title}</a></li>
         );
 
         return (

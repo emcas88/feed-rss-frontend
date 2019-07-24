@@ -11,8 +11,8 @@ class FeedCardList extends React.Component {
     }
 
     render() {
-        const feedItems = this.props.feeds.map((feedElement) =>
-            <FeedCardElement key={feedElement.id} feed={feedElement} />
+        const feedItems = this.props.feeds.map((feedElement, index) =>
+            <FeedCardElement key={index} feed={feedElement} />
         );
 
         return (

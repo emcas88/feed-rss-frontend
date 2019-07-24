@@ -1,7 +1,7 @@
 
 .feed-card-element {
     border: 1px solid;
-    width: calc((100vw - 174px) / 3);
+    width: calc((100vw - 180px) / 3);
     margin-left: 40px;
     margin-bottom: 40px; 
     float: left;

@@ -1,11 +1,13 @@
 import React from 'react';
-import RSSParser from 'rss-parser'
 import './FeedAddMain.css';
+import FeedOnlineService from '../services/FeedOnlineService';
 
 class FeedAddMain extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.feedOnlineService = new FeedOnlineService();
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -20,40 +22,29 @@ class FeedAddMain extends React.Component {
         this.setState({feedUrl: event.target.value});
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         event.preventDefault();
 
-        if (this.state.feedUrl === "")
+        if (!this.state.feedUrl)
             return;
 
-        let parser = new RSSParser();
-        const CORS_PROXY = "https://cors-anywhere.herokuapp.com/"
+        try {
+            let feedInfo = await this.feedOnlineService.fetchRssFeed(this.state.feedUrl);
 
-        // https://www.reddit.com/.rss
- 
-        parser.parseURL(CORS_PROXY + this.state.feedUrl, (err, feed) => {
-            console.log(feed);
-            console.log(err);
-
-            if (err) {
-                this.setState((state, props) => ({
-                    feedUrl: ''
-                }));
-
-                return;
-            }
+            console.log(feedInfo);
 
             this.props.newFeedAction({
-                id: this.state.feedId,
-                title: feed.title,
-                latestNews: feed.items
+                url: this.state.feedUrl,
+                title: feedInfo.title,
+                items: feedInfo.items
             });
             
-            this.setState((state, props) => ({
-                feedId: state.feedId + 1,
-                feedUrl: ''
-            }));
-        });
+            this.setState({feedUrl: ''});
+        }
+        catch (err) {
+            console.log(err);
+            this.setState({feedUrl: ''});
+        }
     }
 
     render() {
@@ -61,7 +52,7 @@ class FeedAddMain extends React.Component {
             <div className="add-feed-container">
                 <form className="flex-container add-feed-form" onSubmit={this.handleSubmit}>
                     <input className="add-feed-input" type="text" name="Feed url" placeholder="feed url" value={this.state.feedUrl}  onChange={this.handleChange}/>
-                    <input className="add-feed-submit" type="submit" value="Add feed"></input>
+                    <input disabled={this.props.loading} className="add-feed-submit" type="submit" value="Add feed"></input>
                 </form>
             </div>
         );
