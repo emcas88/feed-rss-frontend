@@ -16,8 +16,12 @@ class FeedCardList extends React.Component {
         );
 
         return (
-            <div className="feed-cards-container">
-                {feedItems}
+            <div className="container">
+                <div className="section">
+                    <div className="columns is-multiline is-mobile">
+                        {feedItems}
+                    </div>
+                </div>
             </div>
         );
     }

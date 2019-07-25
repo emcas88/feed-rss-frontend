@@ -4,6 +4,8 @@ import FeedAddMain from './components/FeedAddMain';
 import FeedCardList from './components/FeedCardList';
 import FeedService from './services/FeedService';
 import FeedOnlineService from './services/FeedOnlineService';
+import BottomScrollListener from 'react-bottom-scroll-listener';
+ 
 
 class App extends React.Component {
   
@@ -14,6 +16,7 @@ class App extends React.Component {
     this.feedOnlineService = new FeedOnlineService();
 
     this.handleNewFeedElement = this.handleNewFeedElement.bind(this);
+    this.handleOnBottomScroll = this.handleOnBottomScroll.bind(this);
 
     this.state = {
       isLoading: true,
@@ -25,15 +28,13 @@ class App extends React.Component {
     try {
       let persistedFeeds = await this.feedService.fetchFeeds();
 
-      console.log(persistedFeeds);
-
       let feedPromises = persistedFeeds.items.map(feed => this.feedOnlineService.fetchRssFeed(feed.name));
       let feeds = await Promise.all(feedPromises);
 
-      console.log(feeds);
-
       this.setState({
         isLoading: false,
+        currentPage: 1,
+        currentLimit: 9,
         feeds: feeds
       });
 
@@ -42,37 +43,66 @@ class App extends React.Component {
       console.log(error);
 
       this.setState({
-        isLoading: true,
+        isLoading: false,
       });
     }
   }
 
   componentWillUnmount() {
-
   }
 
   async handleNewFeedElement(newFeed) {
     this.setState((state, props) => ({
-      feeds: state.feeds.concat([newFeed])
+      feeds: state.feeds.concat([newFeed.feed])
     }));
 
     try {
-      let response = await this.feedService.saveFeed({
+      await this.feedService.saveFeed({
         name: newFeed.url
       });
-
-      console.log(response);
     }
     catch (err) {
       console.log(err);
     }
   }
 
+  async handleOnBottomScroll() {
+    try {
+      this.setState({ isLoading: true });
+
+      let persistedFeeds = await this.feedService.fetchFeeds(this.state.currentPage + 1, this.state.currentLimit);
+
+      if (persistedFeeds.items.lenght === 0) {
+        this.setState({ isLoading: false });
+        return;
+      }
+
+      let feedPromises = persistedFeeds.items.map(feed => this.feedOnlineService.fetchRssFeed(feed.name));
+      let feeds = await Promise.all(feedPromises);
+
+      this.setState((state, props) => ({
+        isLoading: false,
+        currentPage: state.currentPage + 1,
+        currentLimit: 9,
+        feeds: state.feeds.concat(feeds)
+      }));
+
+    }
+    catch (error) {
+      console.log(error);
+
+      this.setState({
+        isLoading: false,
+      });
+    }
+  }
+
   render() {
     return (
       <div>
-        <FeedAddMain className="main-container" loading={this.state.isLoading} newFeedAction={this.handleNewFeedElement}/>
-        <FeedCardList className="feed-container" feeds={this.state.feeds}/>
+        <FeedAddMain loading={this.state.isLoading} newFeedAction={this.handleNewFeedElement}/>
+        <FeedCardList feeds={this.state.feeds}/>
+        <BottomScrollListener onBottom={this.handleOnBottomScroll} />
       </div>
     );
   }
