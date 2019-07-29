@@ -2,9 +2,8 @@ import React from 'react';
 import './App.css';
 import FeedAddMain from './components/FeedAddMain';
 import FeedCardList from './components/FeedCardList';
-import FeedService from './services/FeedService';
-import FeedOnlineService from './services/FeedOnlineService';
 import BottomScrollListener from 'react-bottom-scroll-listener';
+import ServiceLocator from './ServiceLocator';
  
 
 class App extends React.Component {
@@ -12,8 +11,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     
-    this.feedService = new FeedService();
-    this.feedOnlineService = new FeedOnlineService();
+    this.feedService = ServiceLocator.getFeedService();
+    this.feedOnlineService = ServiceLocator.getFeedOnlineService();
 
     this.handleNewFeedElement = this.handleNewFeedElement.bind(this);
     this.handleOnBottomScroll = this.handleOnBottomScroll.bind(this);
@@ -28,11 +27,11 @@ class App extends React.Component {
     try {
       let persistedFeeds = await this.feedService.fetchFeeds();
 
-      let feedPromises = persistedFeeds.items.map(feed => this.feedOnlineService.fetchRssFeed(feed.name));
+      let feedPromises = persistedFeeds.items.map(feed => this.feedOnlineService.fetchRssFeed(feed.url));
       let feeds = await Promise.all(feedPromises);
 
       this.setState({
-        isLoading: false,
+        isLoading: false, 
         currentPage: 1,
         currentLimit: 9,
         feeds: feeds
@@ -58,7 +57,7 @@ class App extends React.Component {
 
     try {
       await this.feedService.saveFeed({
-        name: newFeed.url
+        url: newFeed.url
       });
     }
     catch (err) {
@@ -77,7 +76,7 @@ class App extends React.Component {
         return;
       }
 
-      let feedPromises = persistedFeeds.items.map(feed => this.feedOnlineService.fetchRssFeed(feed.name));
+      let feedPromises = persistedFeeds.items.map(feed => this.feedOnlineService.fetchRssFeed(feed.url));
       let feeds = await Promise.all(feedPromises);
 
       this.setState((state, props) => ({

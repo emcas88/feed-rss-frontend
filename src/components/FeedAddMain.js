@@ -1,13 +1,13 @@
 import React from 'react';
 import './FeedAddMain.css';
-import FeedOnlineService from '../services/FeedOnlineService';
+import ServiceLocator from '../ServiceLocator';
 
 class FeedAddMain extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.feedOnlineService = new FeedOnlineService();
+        this.feedOnlineService = ServiceLocator.getFeedOnlineService();
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
