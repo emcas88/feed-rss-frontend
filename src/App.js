@@ -26,8 +26,8 @@ class App extends React.Component {
   async componentDidMount() {
     try {
       let persistedFeeds = await this.feedService.fetchFeeds();
-
       let feedPromises = persistedFeeds.items.map(feed => this.feedOnlineService.fetchRssFeed(feed.url));
+
       let feeds = await Promise.all(feedPromises);
 
       this.setState({
@@ -36,7 +36,6 @@ class App extends React.Component {
         currentLimit: 9,
         feeds: feeds
       });
-
     }
     catch (error) {
       console.log(error);
@@ -48,6 +47,7 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
+
   }
 
   async handleNewFeedElement(newFeed) {

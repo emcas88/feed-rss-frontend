@@ -46,7 +46,6 @@ class FeedAddMain extends React.Component {
     }
 
     render() {
-
         return (
             <div className="container">
                 <form className="section" onSubmit={this.handleSubmit}>
