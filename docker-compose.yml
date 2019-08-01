@@ -1,0 +1,9 @@
+version: '3.3'
+
+services:
+  web:
+    container_name: 'feedrss-frontend'
+    network_mode: bridge
+    build: .
+    ports:
+      - '3000:3000'
